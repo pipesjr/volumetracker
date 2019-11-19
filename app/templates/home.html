@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block app_content %}
+<main role="main">
+	<div class="jumbotron">
+		<div class="container">
+			<h1 class="display-3"> Welcome to Volume Tracker</h1>
+			<p>A workout tracker that is based on the number of sets you do per bodypart.
+				</p>
+			<p>  
+
+				<a class="btn btn-primary btn-lg" href="/register" value="sign up">Sign Up</a>
+			</p>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-4">
+				<h2> Exercise Creator </h2>
+				<p>
+					Create your exercises based on the ratio you want them to have for each bodypart. 
+					For example, you may create your bench press to be 1.0 for chest and .5 for triceps. 
+					These means 5 sets of Bench Press would be 5 sets of volume for chest and 2.5 sets of volume for triceps.
+				</p>
+			</div>
+			<div class="col-md-4">
+				<h2> Session and Mesocycle </h2>
+				<p>Create your sessions based on your exercises and throw them all together to create a mesocycle 
+				</p>
+			</div>
+			<div class="col-md-4">
+				<h2> Analyzer </h2>
+				<p>Analyze how many sets you did for each bodypart per session. You also get a visual of how your volume is progressing for each bodypart over your mesocycle.
+				</p>
+			</div>
+		</div>
+	</div>
+
+</main>
+{% endblock %}

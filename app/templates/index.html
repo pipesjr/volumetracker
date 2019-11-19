@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+ <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	$('#first_cat').change(function(){
+		$.ajax({
+			url: '/getplot',
+			type: 'GET',
+			dataType:"json",
+			data:  {'selected': document.getElementById('first_cat').value },
+			success: function(response){
+                var layout = {'title':{'text':'Sets per Week'},
+                                'xaxis':{'title':{'text': 'Week'}},
+                                'yaxis':{'title':{'text': 'Number of Sets'}}}                
+				console.log(response)
+				Plotly.newPlot('linegraph',response,layout)
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+	});
+});
+$(function(){
+    $('#first_cat').change(function(){
+        $.ajax({
+            url: '/getmeso',
+            type: 'GET',
+            dataType:"json",
+            data:  {'selected': document.getElementById('first_cat').value },
+            success: function(response){
+                $('#tablecontainer').empty();
+                console.log(response)
+                var content = '<table class="table table-light table-bordered table-hover" id="meso-table"><thead><tr><th scope="col" data-field="week">Week</th><th scope="col" data-field="sessionnumber">Session Number</th><th scope="col"data-field="session-name">Session Name</th><th scope="col" data-field="date">Date</th></tr></thead><tbody>'
+
+                for (var key in response){
+                    content = content + '<tr><td>'+ response[key]['week'] +'</td><td>' + response[key]['session_num']+ '</td><td>' + key  + '</td><td>' + response[key]['date'] +'</td></tr>'
+                    title = '<h3> Sessions in ' + response[key]['mesocycle name'] + '</h3>'
+
+                }
+                content = title + content + '</tbody></table>'
+                $('#tablecontainer').append(content)
+
+            },
+            error: function(error){
+                console.log(error);
+            }
+        });
+    });
+});
+
+
+$(function(){
+    $('#second_cat').change(function(){
+        $.ajax({
+            url: '/get-sessions',
+            type: 'GET',
+            dataType:"json",
+            data:  {'selected': document.getElementById('second_cat').value },
+            success: function(response){
+                console.log(response)
+                var layout = {'title':{'text':'Sets per Muscle group'},
+                                'xaxis':{'title':{'text': 'Muscle groups'}},
+                                'yaxis':{'title':{'text': 'Number of Sets'}}}
+                Plotly.newPlot('bargraph',response,layout)
+            },
+            error: function(error){
+                console.log(error);
+            }
+        });
+    });
+});
+
+$(function(){
+    $('#second_cat').change(function(){
+        $.ajax({
+            url: '/session-table',
+            type: 'GET',
+            dataType:"json",
+            data:  {'selected': document.getElementById('second_cat').value },
+            success: function(response){
+                $('#tablecontainertwo').empty();
+                console.log(response)
+                var content = '<table class="table table-light table-bordered table-hover" id="meso-table"><thead><tr><th scope="col" data-field="exercise">Exercise</th><th scope="col" data-field="set">Set</th><th scope="col"data-field="rep">Rep</th><th scope="col" data-field="weight">Weight</th></tr></thead><tbody>'
+
+                for (var dict in response){
+                    content = content + '<tr><td>'+ response[dict]['name'] +'</td><td>' + response[dict]['sets']+ '</td><td>' + response[dict]['reps']   + '</td><td>' + response[dict]['weight'] +'</td></tr>'
+                    title = '<h3> Session'+ '</h3>'
+
+                }
+                content = title + content + '</tbody></table>'
+                $('#tablecontainertwo').append(content)
+            },
+            error: function(error){
+                console.log(error);
+            }
+        });
+    });
+});
+
+
+//mesoAjax('get-sessions-in-meso')
+</script>
+<div class="container features">
+    <div class="jumbotron">
+        <div class="row">
+            <h1>Analyzer</h1>
+        </div>
+	<div class="row">
+    <div class="col-6">
+    <label> Choose your meso</label>
+    <select class="form-control" id='first_cat'>
+    	{% for meso in mesos %}
+    	<option value="{{ meso }}">{{ meso }} </option>
+    	{% endfor %}
+    </select>
+   <div class="chart" id="linegraph">
+   </div>
+</div>
+
+    <div class="col-6">
+    <label> Session</label>
+    <select class="form-control" id='second_cat'>
+    	{% for session in sessions %}
+    	<option value="{{ session[0] }}" name="{{ session[1] }}">{{ session[1] }} </option>
+    	{% endfor %}
+    </select>
+   <div class="chart" id="bargraph">
+ </div>
+</div>
+
+</div>
+<div class="row">
+    <div class="col-6">
+        <div class="container" id="tablecontainer">
+        </div>
+    </div>
+        <div class="col-6">
+        <div class="container" id="tablecontainertwo">
+        </div>
+    </div>
+</div>
+</div>                  
+</div>
+
+{% endblock %}

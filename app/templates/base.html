@@ -1,0 +1,76 @@
+{% extends "bootstrap/base.html" %}
+<!-- {% block head %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+ <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+{% endblock %} -->
+{% block title %}
+
+{% endblock %}
+<!--         <nav class="navbar navbar-light bg-light"> 
+        <a  class="navbar-brand" href="#"> Microblog:</a>
+        <a href="{{ url_for('index') }}">Home</a>
+        {% if current_user.is_anonymous %}
+        <a href="{{ url_for('login') }}">Login</a>
+        {% else %}
+        <a href="{{ url_for('logout') }}">Logout</a>
+        {% endif %}
+        <a href="{{ url_for('exercise') }}">Exercise</a>
+        </nav> -->
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="{{ url_for('index') }}">Volume Tracker</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li {% if request.path == url_for('index') %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
+        <a class="nav-link" href="{{ url_for('index') }}">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li {% if request.path == url_for('exercise') %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
+        <a class="nav-link" href="{{ url_for('exercise') }}"}>Exercise Creator</a>
+      </li>
+      <li {% if request.path == url_for('session') %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
+        <a class="nav-link" href="{{ url_for('session') }}"}>Session Creator</a>
+      </li>
+      <li {% if request.path == url_for('mesocycle') %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
+        <a class="nav-link" href="{{ url_for('mesocycle') }}"}>Mesocycle Creator</a>
+      </li>
+      <li {% if request.path == url_for('analyzer') %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
+        <a class="nav-link" href="{{ url_for('analyzer') }}"}>Analyzer</a>
+      </li>
+      {% if current_user.is_anonymous %}
+      <li {% if request.path == url_for('login') %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
+        <a class="nav-link" href="{{url_for('login') }}">Login</a>
+      </li>
+      <li {% if request.path == url_for('register') %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
+        <a class="nav-link" href="{{url_for('register') }}">Register</a>
+      </li>
+      {% else %}
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+      </li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>
+
+ {% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-info" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        {# application content needs to be provided in the app_content block #}
+        {% block app_content %}{% endblock %}
+    </div>
+{% endblock %}
